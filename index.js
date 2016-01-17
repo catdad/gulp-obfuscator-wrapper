@@ -35,6 +35,10 @@ module.exports = function(options) {
         var fileKey = path.relative(fullBase, file.path);
         
         reader(file, enc, function(err, content, filepath) {
+            if (err) {
+                return cb(err);
+            }
+            
             fileStore[fileKey] = content;
             cb();
         });
