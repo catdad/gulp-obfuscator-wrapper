@@ -45,6 +45,7 @@ var gulp = require('gulp');
     gulp.task('test', function() {
         //     source list                     base for the files
         return gulp.src('../fixtures/**/*.js', { base: '../fixtures' })
+            // feel free to pipe through anything else before obfuscating
             .pipe(obfuscator({
                 // the entry file
                 entry: 'main.js',
