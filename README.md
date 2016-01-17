@@ -23,6 +23,7 @@ gulp.task('obfuscate', function() {
                 // any options for compressor
             }
         }))
+        // default name is obfuscated.js, so you'll probably want to change it
         .pipe(rename('my-name.js'))
         .pipe(gulp.dest('./'));
 });
