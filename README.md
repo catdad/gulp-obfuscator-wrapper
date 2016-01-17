@@ -37,6 +37,5 @@ gulp.task('obfuscate', function() {
         .pipe(gulp.dest('./'));
 });
 ```
-[![Analytics][12]][13]
-[12]: https://ga-beacon.appspot.com/UA-17159207-7/gulp-obfuscator-wrapper/readme?flat
-[13]: https://github.com/igrigorik/ga-beacon
+
+[![Analytics](https://ga-beacon.appspot.com/UA-17159207-7/gulp-obfuscator-wrapper/readme?flat)](https://github.com/igrigorik/ga-beacon)
