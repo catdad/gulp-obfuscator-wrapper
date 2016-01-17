@@ -4,7 +4,8 @@
   "description": "A Gulp wrapper for Obfuscator",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "mocha": "mocha",
+    "test": "istanbul cover --dir coverage node_modules/mocha/bin/_mocha"
   },
   "keywords": [
     "obfuscator",
@@ -21,7 +22,10 @@
     "through2": "^2.0.0"
   },
   "devDependencies": {
-    "gulp": "^3.9.0"
+    "chai": "^3.4.1",
+    "gulp": "^3.9.0",
+    "istanbul": "^0.4.2",
+    "mocha": "^2.3.4"
   },
   "directories": {
     "test": "test"
