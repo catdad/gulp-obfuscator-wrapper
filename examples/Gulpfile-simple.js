@@ -1,26 +1,29 @@
 /* jshint node: true */
 
+// A simple exampe, showing the task to run the standard Obfuscator
+// library, as well as the equivalent options for running the 
+// Gulp plugin.
+
 var gulp = require('gulp');
 
 (function real() {
     var Options = require('obfuscator').Options;
     var obfuscator = require('obfuscator').obfuscator;
     var options = new Options(
-        [ '../fixtures/main.js', '../fixtures/included.js' ], 
+        // list of all of the files
+        [ '../fixtures/main.js', '../fixtures/included.js' ],
+        // the base for all files
         '../fixtures', 
+        // the entry file
         'main.js',
+        // mandle stings?
         true
     );
 
-    // custom compression options 
-    // see https://github.com/mishoo/UglifyJS2/#compressor-options 
     options.compressor = {
-        conditionals: true,
-        evaluate: true,
-        booleans: true,
-        loops: true,
-        unused: false,
-        hoist_funs: false
+        // I like settings this one, because it makes leaving it
+        // true makes Express apps fail sometimes.
+        unused: false
     };
 
     gulp.task('real', function(done) {
@@ -29,6 +32,7 @@ var gulp = require('gulp');
                 throw err;
             }
 
+            // write the file yourself, ugh
             console.log(obfuscated);
             done();
         });    
@@ -39,13 +43,17 @@ var gulp = require('gulp');
     var obfuscator = require('../index.js');
     
     gulp.task('test', function() {
+        //     source list                     base for the files
         return gulp.src('../fixtures/**/*.js', { base: '../fixtures' })
             .pipe(obfuscator({
+                // the entry file
                 entry: 'main.js',
+                // any compressor options
                 compressor: {
                     unused: false
                 }
             }))
+            // use Gulp to write the output!
             .pipe(gulp.dest('./'));   
     });
     
