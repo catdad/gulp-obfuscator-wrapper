@@ -15,12 +15,12 @@ var gulp = require('gulp');
     // custom compression options 
     // see https://github.com/mishoo/UglifyJS2/#compressor-options 
     options.compressor = {
-      conditionals: true,
-      evaluate: true,
-      booleans: true,
-      loops: true,
-      unused: false,
-      hoist_funs: false
+        conditionals: true,
+        evaluate: true,
+        booleans: true,
+        loops: true,
+        unused: false,
+        hoist_funs: false
     };
 
     gulp.task('real', function(done) {
@@ -42,7 +42,6 @@ var gulp = require('gulp');
         return gulp.src('../fixtures/**/*.js', { base: '../fixtures' })
             .pipe(obfuscator({
                 entry: 'main.js',
-                strings: true,
                 compressor: {
                     unused: false
                 }

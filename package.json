@@ -25,7 +25,8 @@
     "chai": "^3.4.1",
     "gulp": "^3.9.0",
     "istanbul": "^0.4.2",
-    "mocha": "^2.3.4"
+    "mocha": "^2.3.4",
+    "shellton": "^1.1.0"
   },
   "directories": {
     "test": "test"

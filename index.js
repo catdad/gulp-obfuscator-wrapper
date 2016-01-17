@@ -14,6 +14,16 @@ var reader = require('./lib/read-vinyl.js');
 var pluginName = 'gulp-obfuscator-wrapper';
 
 module.exports = function(options) {
+    options = options || {};
+    
+    if (!options.entry) {
+        throw new PluginError(pluginName, 'options.entry is required');
+    }
+    
+    options = _.defaults(options, {
+        strings: true
+    });
+    
     var fileStore = {};
     var firstFile;
     
@@ -45,7 +55,8 @@ module.exports = function(options) {
         
         obfuscator(obfuscatorOptions, function(err, obfuscated) {
             if (err) {
-                throw new PluginError(pluginName, err.message);
+                err = new PluginError(pluginName, 'Obfuscation error: ' + err.message);
+                return cb(err);
             }
             
             var file = firstFile.clone({ contents: false });
@@ -59,7 +70,3 @@ module.exports = function(options) {
     
     return through.obj(bufferContents, endStream);
 };
-
-// pass the original obfuscator and Options objects through
-//module.exports.obfuscator = obfuscator;
-//module.exports.Options = obfuscator.Options;
