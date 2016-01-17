@@ -28,7 +28,7 @@ module.exports = function(options) {
     }
     
     function endStream(cb) {
-        
+        var that = this;
         var base = firstFile.base;
         
         var register = require('./lib/register.js')(obfuscator, fileStore);
@@ -47,19 +47,12 @@ module.exports = function(options) {
                 console.log(err.stack);
             }
             
-            gutil.log(gutil.colors.green(obfuscated));
-        
-            var fileOpts = {
-                cwd: path.dirname(base),
-                base: base,
-                path: path.posix.join(base, 'name.js')
-            };
-
-            fileOpts.content = new Buffer(obfuscated);
-
-            var joined = new File(fileOpts);
-
-            cb(null, joined);
+            var file = firstFile.clone({ contents: false });
+            file.path = path.join(firstFile.base, 'name.js');
+            file.contents = new Buffer(obfuscated);
+            
+            that.push(file);
+            cb();
         });
     }
     
@@ -67,5 +60,5 @@ module.exports = function(options) {
 };
 
 // pass the original obfuscator and Options objects through
-module.exports.obfuscator = obfuscator;
-module.exports.Options = obfuscator.Options;
+//module.exports.obfuscator = obfuscator;
+//module.exports.Options = obfuscator.Options;

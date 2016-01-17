@@ -14,6 +14,7 @@
   "author": "Kiril Vatev <vatev.1@gmail.com>",
   "license": "ISC",
   "dependencies": {
+    "event-stream": "^3.3.2",
     "gulp-util": "^3.0.7",
     "lodash": "^4.0.0",
     "obfuscator": "^0.5.4",
