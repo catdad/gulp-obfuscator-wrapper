@@ -11,6 +11,8 @@ var PluginError = gutil.PluginError;
 var obfuscator = require('obfuscator').obfuscator;
 var reader = require('./lib/read-vinyl.js');
 
+var pluginName = 'gulp-obfuscator-wrapper';
+
 module.exports = function(options) {
     var fileStore = {};
     var firstFile;
@@ -43,8 +45,7 @@ module.exports = function(options) {
         
         obfuscator(obfuscatorOptions, function(err, obfuscated) {
             if (err) {
-                gutil.log(gutil.colors.red(err));
-                console.log(err.stack);
+                throw new PluginError(pluginName, err.message);
             }
             
             var file = firstFile.clone({ contents: false });
