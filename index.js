@@ -48,7 +48,7 @@ module.exports = function(options) {
             }
             
             var file = firstFile.clone({ contents: false });
-            file.path = path.join(firstFile.base, 'name.js');
+            file.path = path.join(firstFile.base, 'obfuscated.js');
             file.contents = new Buffer(obfuscated);
             
             that.push(file);
