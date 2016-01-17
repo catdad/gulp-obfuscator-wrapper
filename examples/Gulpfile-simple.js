@@ -6,11 +6,12 @@
 
 var gulp = require('gulp');
 
-(function real() {
+(function standardObfuscatorModule() {
+    var fs = require('fs');
     var Options = require('obfuscator').Options;
     var obfuscator = require('obfuscator').obfuscator;
     var options = new Options(
-        // list of all of the files
+        // list of all of the files... hardcoded
         [ '../fixtures/main.js', '../fixtures/included.js' ],
         // the base for all files
         '../fixtures', 
@@ -20,6 +21,7 @@ var gulp = require('gulp');
         true
     );
 
+    // any compressor options
     options.compressor = {
         // I like settings this one, because it makes leaving it
         // true makes Express apps fail sometimes.
@@ -33,14 +35,14 @@ var gulp = require('gulp');
             }
 
             // write the file yourself, ugh
-            console.log(obfuscated);
+            fs.writeFileSync('obfuscated.js', obfuscated);
             done();
         });    
     });
 })();
 
-(function test() {
-    var obfuscator = require('../index.js');
+(function obfuscatorGulpPlugin() {
+    var obfuscator = require('gulp-obfuscator-wrapper');
     
     gulp.task('test', function() {
         //     source list                     base for the files
@@ -57,5 +59,4 @@ var gulp = require('gulp');
             // use Gulp to write the output!
             .pipe(gulp.dest('./'));   
     });
-    
 })();
