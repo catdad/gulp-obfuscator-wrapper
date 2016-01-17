@@ -8,7 +8,6 @@ var es = require('event-stream');
 var reader = require('../lib/read-vinyl.js');
 
 describe('[Read Vinyl]', function() {
-    it('takes a vinyl file');
     
     it('reads a vinyl stream file', function(done) {
         var file = new File({
@@ -37,6 +36,5 @@ describe('[Read Vinyl]', function() {
             done();
         });
     });
-    
     
 });

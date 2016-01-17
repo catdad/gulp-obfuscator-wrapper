@@ -6,6 +6,7 @@ var path = require('path');
 var obfuscator = require('../index.js');
 var Vinyl = require('gulp-util').File;
 var shellton = require('shellton');
+var through = require('through2');
 
 function File(name, content) {
     return new Vinyl({
@@ -58,7 +59,7 @@ describe('[Index]', function() {
         source.end();
     });
     
-    xit('produces a JS file that executes in Node', function(done) {
+    it('produces a JS file that executes in Node', function(done) {
         // let's execute the file
         var source = obfuscator({ entry: 'one.js' });
         var content;
@@ -68,11 +69,20 @@ describe('[Index]', function() {
         });
         
         source.on('end', function() {
-            shellton('node -e "' + content + '"', function(err, stdout) {
-                console.log(err);
-                console.log(stdout);
+            var input = through();
+            
+            shellton({ 
+                task: 'node', 
+                stdin: input
+            }, function(err, stdout, stderr) {
+                expect(err).to.not.be.ok;
+                expect(stdout.trim()).to.equal('llama');
+                expect(stderr.trim()).to.equal('');
+
                 done();
             });
+            
+            input.end(content);
         });
         
         source.write(File('one.js', 'console.log(\'llama\')'));
