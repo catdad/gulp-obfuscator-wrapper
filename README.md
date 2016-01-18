@@ -11,11 +11,11 @@
 
 This is a wrapper around the great [node-obfuscator](https://github.com/stephenmathieson/node-obfuscator) library by [stephenmathieson](https://github.com/stephenmathieson). It was made simply because I needed it for my own builds.
 
-# Install
+## Install
 
     npm install --save-dev gulp-obfuscator-wrapper
     
-# Use
+## Use
 
 ```javascript
 var obfuscator = require('gulp-obfuscator-wrapper');

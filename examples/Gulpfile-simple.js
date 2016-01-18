@@ -17,7 +17,7 @@ var gulp = require('gulp');
         '../fixtures', 
         // the entry file
         'main.js',
-        // mandle stings?
+        // mangle stings?
         true
     );
 
