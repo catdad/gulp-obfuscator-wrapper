@@ -20,10 +20,9 @@ $RECYCLE.BIN/
 # =========================
 # Operating System Files
 # =========================
-
 # OSX
 # =========================
-
+# OSX
 .DS_Store
 .AppleDouble
 .LSOverride
@@ -46,6 +45,6 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
-# Node studd
+# Node stuff
 node_modules/
 coverage/
