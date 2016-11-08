@@ -1,20 +1,34 @@
 # Gulp Obfuscator Wrapper
 
-[![Build Status](https://travis-ci.org/catdad/gulp-obfuscator-wrapper.svg?branch=master)](https://travis-ci.org/catdad/gulp-obfuscator-wrapper)
-[![Code Climate](https://codeclimate.com/github/catdad/gulp-obfuscator-wrapper/badges/gpa.svg)](https://codeclimate.com/github/catdad/gulp-obfuscator-wrapper)
-[![Test Coverage](https://codeclimate.com/github/catdad/gulp-obfuscator-wrapper/badges/coverage.svg)](https://codeclimate.com/github/catdad/gulp-obfuscator-wrapper/coverage)
-[![Version][9]][8] [![Downloads][7]][8]
+[![Build][1]][2]
+[![Test Coverage][3]][4]
+[![Code Climate][5]][6]
+[![Downloads][7]][8]
+[![Version][9]][8]
+[![Dependency Status][10]][11]
+
+[1]: https://travis-ci.org/catdad/gulp-obfuscator-wrapper.svg?branch=master
+[2]: https://travis-ci.org/catdad/gulp-obfuscator-wrapper
+
+[3]: https://codeclimate.com/github/catdad/gulp-obfuscator-wrapper/badges/coverage.svg
+[4]: https://codeclimate.com/github/catdad/gulp-obfuscator-wrapper/coverage
+
+[5]: https://codeclimate.com/github/catdad/gulp-obfuscator-wrapper/badges/gpa.svg
+[6]: https://codeclimate.com/github/catdad/gulp-obfuscator-wrapper
 
 [7]: https://img.shields.io/npm/dm/gulp-obfuscator-wrapper.svg
 [8]: https://www.npmjs.com/package/gulp-obfuscator-wrapper
 [9]: https://img.shields.io/npm/v/gulp-obfuscator-wrapper.svg
+
+[10]: https://david-dm.org/catdad/gulp-obfuscator-wrapper.svg
+[11]: https://david-dm.org/catdad/gulp-obfuscator-wrapper
 
 This is a wrapper around the great [node-obfuscator](https://github.com/stephenmathieson/node-obfuscator) library by [stephenmathieson](https://github.com/stephenmathieson). It was made simply because I needed it for my own builds.
 
 ## Install
 
     npm install --save-dev gulp-obfuscator-wrapper
-    
+
 ## Use
 
 ```javascript
