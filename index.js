@@ -29,6 +29,10 @@ module.exports = function(options) {
     var firstFile;
 
     function bufferContents(file, enc, cb) {
+        if (!file.isStream() && !file.isBuffer()) {
+            return cb();
+        }
+
         firstFile = firstFile || file;
 
         var fullBase = path.resolve('.', file.base);

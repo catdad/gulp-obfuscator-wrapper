@@ -125,6 +125,25 @@ describe('[Index]', function() {
         source.end();
     });
 
+    it('obfuscates the fixtures files using gulp', function(done) {
+        var output;
+
+        gulp.src('fixtures/**', { base: path.resolve(process.cwd(), 'fixtures') })
+            .pipe(obfuscator({
+                entry: 'fixtures/main.js'
+            })).on('data', function(vinylFile) {
+                if (output) {
+                    throw new Error('only one file should be written after obfuscation');
+                }
+
+                output = vinylFile.contents;
+            }).on('end', function() {
+                expect(Buffer.isBuffer(output)).to.equal(true);
+                expect(output.toString()).to.have.length.above(0);
+
+                done();
+            });
+    });
 });
 
 describe('[Register]', function() {
