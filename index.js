@@ -50,7 +50,6 @@ module.exports = function(options) {
 
     function endStream(cb) {
         var that = this;
-        var base = firstFile.base;
 
         register(obfuscator, fileStore);
 
