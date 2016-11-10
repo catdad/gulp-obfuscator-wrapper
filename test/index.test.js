@@ -128,7 +128,9 @@ describe('[Index]', function() {
     it('obfuscates the fixtures files using gulp', function(done) {
         var output;
 
-        gulp.src('fixtures/**', { base: path.resolve(process.cwd(), 'fixtures') })
+        var BASE = path.resolve(process.cwd(), 'fixtures');
+
+        gulp.src('fixtures/**', { base: BASE })
             .pipe(obfuscator({
                 entry: 'fixtures/main.js'
             })).on('data', function(vinylFile) {
@@ -136,10 +138,78 @@ describe('[Index]', function() {
                     throw new Error('only one file should be written after obfuscation');
                 }
 
-                output = vinylFile.contents;
+                output = vinylFile;
             }).on('end', function() {
-                expect(Buffer.isBuffer(output)).to.equal(true);
-                expect(output.toString()).to.have.length.above(0);
+                expect(Buffer.isBuffer(output.contents)).to.equal(true);
+                expect(output.contents.toString()).to.have.length.above(0);
+
+                done();
+            });
+    });
+
+    it('creates a new vinyl file in the location of the base as defined in gulp.src', function(done) {
+        var output;
+
+        var BASE = path.resolve(process.cwd(), 'fixtures');
+
+        gulp.src('fixtures/**', { base: BASE })
+            .pipe(obfuscator({
+                entry: 'fixtures/main.js'
+            })).on('data', function(vinylFile) {
+                if (output) {
+                    throw new Error('only one file should be written after obfuscation');
+                }
+
+                output = vinylFile;
+            }).on('end', function() {
+                expect(output.base).to.equal(BASE);
+                expect(output.path).to.equal(path.join(BASE, 'obfuscated.js'));
+
+                done();
+            });
+    });
+
+    it('used the base in gulp.src even when it does not make sense', function(done) {
+        var output;
+
+        var BASE = path.resolve(process.cwd());
+
+        gulp.src('fixtures/**', { base: BASE })
+            .pipe(obfuscator({
+                entry: 'fixtures/main.js'
+            })).on('data', function(vinylFile) {
+                if (output) {
+                    throw new Error('only one file should be written after obfuscation');
+                }
+
+                output = vinylFile;
+            }).on('end', function() {
+                expect(output.base).to.equal(BASE);
+                expect(output.path).to.equal(path.join(BASE, 'obfuscated.js'));
+
+                done();
+            });
+    });
+
+    it('figures out the base if one is not defined in gulp.src', function(done) {
+        var output;
+
+        var BASE = path.resolve(process.cwd(), 'fixtures');
+
+        gulp.src('fixtures/**')
+            .pipe(obfuscator({
+                entry: 'fixtures/main.js'
+            })).on('data', function(vinylFile) {
+                if (output) {
+                    throw new Error('only one file should be written after obfuscation');
+                }
+
+                output = vinylFile;
+            }).on('end', function() {
+                // make sure to normalize both paths, since base could include a trailing slash
+                expect(path.join(output.base, '.')).to.equal(path.join(BASE, '.'));
+
+                expect(output.path).to.equal(path.join(BASE, 'obfuscated.js'));
 
                 done();
             });
