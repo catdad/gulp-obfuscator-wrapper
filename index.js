@@ -51,13 +51,18 @@ module.exports = function(options) {
     function endStream(cb) {
         var that = this;
 
+        var fileList = _.keys(fileStore);
+
+        if (fileList.length === 0) {
+            return cb();
+        }
+
         register(obfuscator, fileStore);
 
-        // run obfuscation
-        var fileList = _.keys(fileStore);
         var entry = options.entry;
         var strings = options.strings;
 
+        // run obfuscation
         var obfuscatorOptions = obfuscator.Options(fileList, './', entry, strings);
         obfuscatorOptions.compressor = options.compressor || {};
 

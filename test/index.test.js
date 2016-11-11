@@ -214,6 +214,17 @@ describe('[Index]', function() {
                 done();
             });
     });
+
+    it('does nothing if no files are matched', function(done) {
+        gulp.src('nonexistent/**')
+            .pipe(obfuscator({
+                entry: 'nonexistent/file.js'
+            }))
+            .on('data', function(vinylFile) {
+                return done(new Error('no files should be written during this test'));
+            })
+            .on('end', done);
+    });
 });
 
 describe('[Register]', function() {
