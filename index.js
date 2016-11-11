@@ -45,7 +45,7 @@ module.exports = function(options) {
 
         register(obfuscator, fileStore);
 
-        var entry = options.entry;
+        var entry = path.relative(firstFile.base, options.entry);
         var strings = options.strings;
 
         // run obfuscation

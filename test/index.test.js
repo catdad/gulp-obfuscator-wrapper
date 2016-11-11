@@ -12,8 +12,8 @@ var gulp = require('gulp');
 function File(name, content) {
     return new Vinyl({
         contents: new Buffer(content),
-        path: path.join(__dirname, name),
-        base: __dirname
+        path: path.resolve('.', name),
+        base: path.resolve('.')
     });
 }
 
@@ -74,7 +74,7 @@ describe('[Index]', function() {
 
     it('produces a JS file that executes in Node', function(done) {
         // let's execute the file
-        var source = obfuscator({ entry: 'one.js' });
+        var source = obfuscator({ entry: 'one.js', strings: false });
         var content;
 
         source.on('data', function(chunk) {
@@ -133,11 +133,11 @@ describe('[Index]', function() {
     it('obfuscates the fixtures files using gulp', function(done) {
         var output;
 
-        var BASE = path.resolve(process.cwd(), 'fixtures');
+        var BASE = path.resolve(process.cwd(), 'fixtures', 'root');
 
-        gulp.src('fixtures/**', { base: BASE })
+        gulp.src('fixtures/root/**', { base: BASE })
             .pipe(obfuscator({
-                entry: 'fixtures/main.js'
+                entry: 'fixtures/root/main.js'
             })).on('data', function(vinylFile) {
                 if (output) {
                     throw new Error('only one file should be written after obfuscation');
@@ -168,11 +168,11 @@ describe('[Index]', function() {
     it('optionally skips obfuscating strings', function(done) {
         var output;
 
-        var BASE = path.resolve(process.cwd(), 'fixtures');
+        var BASE = path.resolve(process.cwd(), 'fixtures/root');
 
-        gulp.src('fixtures/**', { base: BASE })
+        gulp.src('fixtures/root/**', { base: BASE })
             .pipe(obfuscator({
-                entry: 'fixtures/main.js',
+                entry: 'fixtures/root/main.js',
                 strings: false
             })).on('data', function(vinylFile) {
                 if (output) {
@@ -204,11 +204,11 @@ describe('[Index]', function() {
     it('creates a new vinyl file in the location of the base as defined in gulp.src', function(done) {
         var output;
 
-        var BASE = path.resolve(process.cwd(), 'fixtures');
+        var BASE = path.resolve(process.cwd(), 'fixtures/root');
 
-        gulp.src('fixtures/**', { base: BASE })
+        gulp.src('fixtures/root/**', { base: BASE })
             .pipe(obfuscator({
-                entry: 'fixtures/main.js'
+                entry: 'fixtures/root/main.js'
             })).on('data', function(vinylFile) {
                 if (output) {
                     throw new Error('only one file should be written after obfuscation');
@@ -228,9 +228,9 @@ describe('[Index]', function() {
 
         var BASE = path.resolve(process.cwd());
 
-        gulp.src('fixtures/**', { base: BASE })
+        gulp.src('fixtures/root/**', { base: BASE })
             .pipe(obfuscator({
-                entry: 'fixtures/main.js'
+                entry: 'fixtures/root/main.js'
             })).on('data', function(vinylFile) {
                 if (output) {
                     throw new Error('only one file should be written after obfuscation');
@@ -248,11 +248,11 @@ describe('[Index]', function() {
     it('figures out the base if one is not defined in gulp.src', function(done) {
         var output;
 
-        var BASE = path.resolve(process.cwd(), 'fixtures');
+        var BASE = path.resolve(process.cwd(), 'fixtures', 'root');
 
-        gulp.src('fixtures/**')
+        gulp.src('fixtures/root/**')
             .pipe(obfuscator({
-                entry: 'fixtures/main.js'
+                entry: 'fixtures/root/main.js'
             })).on('data', function(vinylFile) {
                 if (output) {
                     throw new Error('only one file should be written after obfuscation');
@@ -278,6 +278,78 @@ describe('[Index]', function() {
                 return done(new Error('no files should be written during this test'));
             })
             .on('end', done);
+    });
+
+    it('obfuscates files with an entry not in the base', function(done) {
+        var output;
+
+        var BASE = path.resolve(process.cwd(), 'fixtures', 'not-root', 'with', 'deep');
+
+        gulp.src('fixtures/not-root/with/deep/**', { base: BASE })
+            .pipe(obfuscator({
+                entry: 'fixtures/not-root/with/deep/files/main.js',
+                strings: false
+            })).on('data', function(vinylFile) {
+                if (output) {
+                    throw new Error('only one file should be written after obfuscation');
+                }
+
+                output = vinylFile;
+            }).on('end', function() {
+                expect(Buffer.isBuffer(output.contents)).to.equal(true);
+                expect(output.contents.toString()).to.have.length.above(0);
+
+                // the original string should appear in the file
+                expect(output.contents.toString()).to.match(/bananas/);
+
+                // make sure code executes correctly
+                execute(output.contents, function(err, stdout, stderr) {
+                    expect(err).to.equal(null);
+                    expect(stdout).to.be.a('string');
+                    expect(stdout.trim()).to.equal('bananas');
+
+                    expect(stderr).to.be.a('string')
+                        .and.to.have.lengthOf(0);
+
+                    done();
+                });
+            });
+    });
+
+    it('obfuscates files with an entry not in the base, using absolute paths', function(done) {
+        var output;
+
+        var BASE = path.resolve(process.cwd(), 'fixtures', 'not-root', 'with', 'deep');
+
+        gulp.src(path.join(BASE, '**'), { base: BASE })
+            .pipe(obfuscator({
+                entry: path.join(BASE, 'files/main.js'),
+                strings: false
+            })).on('data', function(vinylFile) {
+                if (output) {
+                    throw new Error('only one file should be written after obfuscation');
+                }
+
+                output = vinylFile;
+            }).on('end', function() {
+                expect(Buffer.isBuffer(output.contents)).to.equal(true);
+                expect(output.contents.toString()).to.have.length.above(0);
+
+                // the original string should appear in the file
+                expect(output.contents.toString()).to.match(/bananas/);
+
+                // make sure code executes correctly
+                execute(output.contents, function(err, stdout, stderr) {
+                    expect(err).to.equal(null);
+                    expect(stdout).to.be.a('string');
+                    expect(stdout.trim()).to.equal('bananas');
+
+                    expect(stderr).to.be.a('string')
+                        .and.to.have.lengthOf(0);
+
+                    done();
+                });
+            });
     });
 });
 
