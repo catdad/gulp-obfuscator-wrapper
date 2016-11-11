@@ -52,6 +52,6 @@ gulp.task('obfuscate', function() {
 });
 ```
 
-In case you did not see the comment mixed in the code, **it is very important to define `base` in your `gulp.src` call**. While this module might likely work without it, it will help to make sure that your project gets obfuscated correctly, especially with large projects that have a complex nested folder structure.
+In case you did not see the comment mixed in the code, **it is very important to define `base` in your `gulp.src` call**. While this module might likely work without it, it will help to make sure that your project gets obfuscated correctly, especially with large projects that have a complex nested folder structure, or if you use absolute file paths when defining your sources or entry file.
 
 [![Analytics](https://ga-beacon.appspot.com/UA-17159207-7/gulp-obfuscator-wrapper/readme?flat)](https://github.com/igrigorik/ga-beacon)
