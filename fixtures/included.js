@@ -3,5 +3,5 @@
 var anotherFile = require('./sub/another-file.js');
 
 module.exports = function() {
-    return 'a string';
+    return anotherFile();
 };

@@ -17,6 +17,18 @@ function File(name, content) {
     });
 }
 
+function execute(code, done) {
+    var input = through();
+
+    shellton({
+        task: 'node',
+        stdin: input
+    }, done);
+
+    input.write(code);
+    input.end();
+}
+
 describe('[Index]', function() {
     it('takes an options object and returns a stream', function() {
         var out = obfuscator({
@@ -70,20 +82,13 @@ describe('[Index]', function() {
         });
 
         source.on('end', function() {
-            var input = through();
-
-            shellton({
-                task: 'node',
-                stdin: input
-            }, function(err, stdout, stderr) {
+            execute(content, function(err, stdout, stderr) {
                 expect(err).to.not.be.ok;
                 expect(stdout.trim()).to.equal('llama');
                 expect(stderr.trim()).to.equal('');
 
                 done();
             });
-
-            input.end(content);
         });
 
         source.write(File('one.js', 'console.log(\'llama\')'));
@@ -143,7 +148,56 @@ describe('[Index]', function() {
                 expect(Buffer.isBuffer(output.contents)).to.equal(true);
                 expect(output.contents.toString()).to.have.length.above(0);
 
-                done();
+                // test that, by default, strings are obfuscated
+                expect(output.contents.toString()).to.not.match(/pineapples/);
+
+                // make sure code executes correctly
+                execute(output.contents, function(err, stdout, stderr) {
+                    expect(err).to.equal(null);
+                    expect(stdout).to.be.a('string');
+                    expect(stdout.trim()).to.equal('pineapples');
+
+                    expect(stderr).to.be.a('string')
+                        .and.to.have.lengthOf(0);
+
+                    done();
+                });
+            });
+    });
+
+    it('optionally skips obfuscating strings', function(done) {
+        var output;
+
+        var BASE = path.resolve(process.cwd(), 'fixtures');
+
+        gulp.src('fixtures/**', { base: BASE })
+            .pipe(obfuscator({
+                entry: 'fixtures/main.js',
+                strings: false
+            })).on('data', function(vinylFile) {
+                if (output) {
+                    throw new Error('only one file should be written after obfuscation');
+                }
+
+                output = vinylFile;
+            }).on('end', function() {
+                expect(Buffer.isBuffer(output.contents)).to.equal(true);
+                expect(output.contents.toString()).to.have.length.above(0);
+
+                // the original string should appear in the file
+                expect(output.contents.toString()).to.match(/pineapples/);
+
+                // make sure code executes correctly
+                execute(output.contents, function(err, stdout, stderr) {
+                    expect(err).to.equal(null);
+                    expect(stdout).to.be.a('string');
+                    expect(stdout.trim()).to.equal('pineapples');
+
+                    expect(stderr).to.be.a('string')
+                        .and.to.have.lengthOf(0);
+
+                    done();
+                });
             });
     });
 
