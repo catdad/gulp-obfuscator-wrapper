@@ -15,7 +15,6 @@
   "author": "Kiril Vatev <vatev.1@gmail.com>",
   "license": "ISC",
   "dependencies": {
-    "event-stream": "^3.3.2",
     "gulp-util": "^3.0.7",
     "lodash": "^4.0.0",
     "obfuscator": "^0.5.4",
@@ -23,7 +22,7 @@
   },
   "devDependencies": {
     "chai": "^3.4.1",
-    "codeclimate-test-reporter": "^0.2.0",
+    "codeclimate-test-reporter": "^0.4.0",
     "gulp": "^3.9.0",
     "istanbul": "^0.4.2",
     "mocha": "^2.3.4",
