@@ -1,15 +1,14 @@
-/* jshint node: true */
+/* jshint node: true, unused: true */
 
 var path = require('path');
 
 var _ = require('lodash');
-var through = require('through2');
 var gutil = require('gulp-util');
-var File = gutil.File;
 var PluginError = gutil.PluginError;
 
+var readVinylStream = require('read-vinyl-file-stream');
+
 var obfuscator = require('obfuscator').obfuscator;
-var reader = require('./lib/read-vinyl.js');
 var register = require('./lib/register.js');
 
 var pluginName = 'gulp-obfuscator-wrapper';
@@ -28,29 +27,16 @@ module.exports = function(options) {
     var fileStore = {};
     var firstFile;
 
-    function bufferContents(file, enc, cb) {
-        if (!file.isStream() && !file.isBuffer()) {
-            return cb();
-        }
-
+    return readVinylStream(function iterator(content, file, stream, cb) {
         firstFile = firstFile || file;
 
         var fullBase = path.resolve('.', file.base);
         var fileKey = path.relative(fullBase, file.path);
 
-        reader(file, enc, function(err, content, filepath) {
-            if (err) {
-                return cb(err);
-            }
+        fileStore[fileKey] = content;
 
-            fileStore[fileKey] = content;
-            cb();
-        });
-    }
-
-    function endStream(cb) {
-        var that = this;
-
+        cb();
+    }, function flush(stream, cb) {
         var fileList = _.keys(fileStore);
 
         if (fileList.length === 0) {
@@ -76,10 +62,8 @@ module.exports = function(options) {
             file.path = path.join(firstFile.base, 'obfuscated.js');
             file.contents = new Buffer(obfuscated);
 
-            that.push(file);
+            stream.push(file);
             cb();
         });
-    }
-
-    return through.obj(bufferContents, endStream);
+    }, 'buffer');
 };
