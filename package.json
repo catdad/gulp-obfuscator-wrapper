@@ -26,7 +26,7 @@
     "gulp": "^3.9.0",
     "istanbul": "^0.4.2",
     "mocha": "^3.2.0",
-    "shellton": "^1.1.0",
+    "shellton": "^3.0.0",
     "through2": "^2.0.0"
   },
   "directories": {
